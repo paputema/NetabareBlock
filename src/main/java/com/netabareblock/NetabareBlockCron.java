@@ -30,6 +30,9 @@ public class NetabareBlockCron {
 	@Autowired
 	NetabareAccountDataRepository netabareAccountDataRepository;
 
+	@Autowired
+	NetabareBlockConfig netabareBlockConfig;
+
 	static ThreadPoolExecutor exec = new ThreadPoolExecutor(1, 1, 0L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
 
 	/**
@@ -38,27 +41,11 @@ public class NetabareBlockCron {
 	 */
 	class NetabareBlockTodo extends Thread {
 
-		private void itsleep(long time) {
-			exec.setCorePoolSize(exec.getCorePoolSize() + 1);
-			try {
-				if (time < 0) {
-					time += 120;
-				}
-				Thread.sleep(time * 1000);
-				if (exec.getCorePoolSize() > 1) {
-					exec.setCorePoolSize(exec.getCorePoolSize() - 1);
-				}
-			} catch (InterruptedException | IllegalArgumentException e) {
-				// TODO 自動生成された catch ブロック
-				e.printStackTrace();
-			}
-		}
 
 		private Twitter twitter;
 		private UserAccountData userData;
 
-		@Autowired
-		NetabareBlockConfig netabareBlockConfig;
+
 		@Override
 		public void run() {
 			super.run();
@@ -74,9 +61,8 @@ public class NetabareBlockCron {
 					Long netabareid = netabareAccountData.getUserid();
 					checkRateLimit(twitter.reportSpam(netabareid).getRateLimitStatus());
 					checkRateLimit(twitter.createBlock(netabareid).getRateLimitStatus());
-
 				} catch (TwitterException e) {
-
+					System.err.println(e);
 				}
 			}
 		}
@@ -90,7 +76,20 @@ public class NetabareBlockCron {
 		private void checkRateLimit(RateLimitStatus rateLimitStatus) {
 			if (rateLimitStatus != null && rateLimitStatus.getRemaining() <= 0) {
 				System.out.println(rateLimitStatus);
-				itsleep(rateLimitStatus.getSecondsUntilReset());
+				long time = rateLimitStatus.getSecondsUntilReset();
+				exec.setCorePoolSize(exec.getCorePoolSize() + 1);
+				try {
+					if (time < 0) {
+						time += 120;
+					}
+					Thread.sleep(time * 1000);
+					if (exec.getCorePoolSize() > 1) {
+						exec.setCorePoolSize(exec.getCorePoolSize() - 1);
+					}
+				} catch (InterruptedException | IllegalArgumentException e) {
+					// TODO 自動生成された catch ブロック
+					e.printStackTrace();
+				}
 			}
 		}
 

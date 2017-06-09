@@ -18,7 +18,7 @@
 }
 
 div {
-	margin-bottom: 10px
+	margin-bottom: 0px;
 }
 </style>
 </head>
@@ -31,29 +31,38 @@ div {
 		<div class="jumbotron">
 			<div>
 
-				<a href="/"><h2>例のネタバレ垢をブロックするやつ</h2></a>
+				<h2><a href="/">例のネタバレ垢をブロックするやつ</a></h2>
 				<p>とあるキンプラのネタバレアカウントを名前を見ずにボタンひとつでブロックとスパム報告をします。
-					名前やプロフィールにネタバレを書き込んだ状態でネタバレを嫌がる人を狙って「いいね」を行い通知により強制的に見せる悪意の強いアカウントです。
-					ぱぱっと作ったので結果とかちゃんと出ないですがとりあえず信じてくれる人は使ってくれればいいと思います。</p>
-
-
-
-				<p>
-					さくらもちさん(<a href="https://twitter.com/skrmch_rhythpri">
-						<span class="fa fa-twitter"></span></a>) も同様のWEBアプリを作ってますので
-						<a href="https://skrm.ch/prettyrhythm/twitter_blocker/">こちら</a>も試してください。
+					名前やプロフィールにネタバレを書き込んだ状態でネタバレを嫌がる人を狙って「いいね」を行い通知により強制的に見せる悪意の強いアカウントであり、何らかの対策が必要であると考えこのアプリを制作しました。
+					そのアカウントのみをターゲットしたアプリであり、一般的なネタバレ行為をする人すべてをブロックする訳では無いことはご承知おきください。
 				</p>
 
-				<p>２０１７年６月３日：機能追加：周期的に自動でブロックを実行するようになりました。
+				<p>
+					さくらもちさん(<a href="https://twitter.com/skrmch_rhythpri"> <span
+						class="fa fa-twitter"></span></a>) も同様のWEBアプリを作ってますので <a
+						href="https://skrm.ch/prettyrhythm/twitter_blocker/">こちら</a>も試してください。
+				</p>
+
+				<p>
+					２０１７年６月３日：機能追加：周期的に自動でブロックを実行するようになりました。
 					２０１７年６月３日以降に本アプリを実行した場合は、ネタバレアカウントが複垢で再発した場合も自動でブロックとスパム報告を実施します。
-					ネタバレアカウントのブラックリスト登録は作者が気づき次第追加するので、ツイッターのメンションやＤＭで知らせてもらえると助かります。</p>
+					ネタバレアカウントのブラックリスト登録は作者が気づき次第追加するので、
+					<a	href="https://twitter.com/messages/compose?recipient_id=251211966"
+						data-screen-name="Chupacabras_MON"
+						data-show-count="false">ツイッターのダイレクトメッセージで知らせてもらえると助かります。</a>
+					<script src="//platform.twitter.com/widgets.js"
+						charset="utf-8">
+						DMをおくる
+					</script>
+
+				</p>
 
 			</div>
 			<div class="row">
 				<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
 					<a href="../requestToken"
-						class="btn btn-block btn-social btn-twitter">
-						<span class="fa fa-twitter"></span>ツイッターでログインして実行
+						class="btn btn-block btn-social btn-twitter"> <span
+						class="fa fa-twitter"></span>ツイッターでログインして実行
 					</a>
 				</div>
 			</div>
@@ -89,9 +98,15 @@ div {
 				</div>
 			</div>
 			<div class="row" th:if="${niconico}">
-				<div class="panel panel-primary">
-					<div class="panel-heading">
-						<h2 class="panel-title">キンプラ公開まで1週間を切りました！ＡＤとＤＭＦを予習して公開に備えましょう。</h2>
+				<div class="panel panel-warning">
+					<div class="panel-heading clearfix">
+						<div class=" pull-left">
+							<h2 class="panel-title" style="vertical-align: middle;">祝！キンプラ公開！キンプラをより楽しむためにもオーロドリームとディアマイフューチャーもチェックしよう！</h2>
+						</div>
+						<div class=" pull-right">
+							<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://netabareblock.ddns.net/" data-via="Chupacabras_MON" data-size="large" data-dnt="true">ツイートする</a>
+							<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+						</div>
 					</div>
 					<div class="panel-body">
 						<div class="center-block text-center">
@@ -111,12 +126,14 @@ div {
 					</div>
 				</div>
 			</div>
-				<div>
-					作った人：<a href="https://twitter.com/Chupacabras_MON">悶絶チュパカブラ<span class="fa fa-twitter"></span></a>
-				</div>
-				<div>
-					ソースコード：<a href="https://github.com/paputema/NetabareBlock">GitHub<span class="fa fa-github"></span></a>
-				</div>
+			<div>
+				作った人：<a href="https://twitter.com/Chupacabras_MON">悶絶チュパカブラ<span
+					class="fa fa-twitter"></span></a>
+			</div>
+			<div>
+				ソースコード：<a href="https://github.com/paputema/NetabareBlock">GitHub<span
+					class="fa fa-github"></span></a>
+			</div>
 		</div>
 	</div>
 </body>

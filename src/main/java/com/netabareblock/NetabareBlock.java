@@ -1,6 +1,8 @@
 package com.netabareblock;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -81,6 +83,42 @@ public class NetabareBlock {
 		return mav;
 	}
 
+
+	private boolean strIsId(String id)
+	{
+		Pattern p = Pattern.compile("^[0-9]+$");
+	    Matcher m = p.matcher(id);
+		return m.matches();
+	}
+	private String getDeleteId(String id)
+	{
+		Pattern p = Pattern.compile("^delete[ ]+([0-9a-zA-Z_]+)$", Pattern.CASE_INSENSITIVE);
+	    Matcher m = p.matcher(id);
+	    String ret = null;
+	    try{
+	    	if(m.matches() && m.groupCount() > 0)
+	    	{
+	    		ret = m.group(1);
+	    	}
+	    }catch(IndexOutOfBoundsException e){
+	    	ret = null;
+	    }
+		return ret;
+	}
+	private Long getUserId(Twitter twitter,String screennameOrId) throws TwitterException
+	{
+		Long UserId = null;
+			if (strIsId(screennameOrId))
+			{
+				UserId = new Long(screennameOrId);
+			}else
+			{
+				UserId = twitter.showUser(screennameOrId).getId();
+			}
+
+		return UserId;
+	}
+
 	@RequestMapping(value ="accessToken")
 	public ModelAndView accessToken(ModelAndView mav) {
 
@@ -110,15 +148,22 @@ public class NetabareBlock {
 
 			if(id != null)
 			{
-				list.clear();
-				NetabareAccountData netabareAccountData = new NetabareAccountData();
-				netabareAccountData.setUserid(new Long(id));
-				list.add(netabareAccountData);
-				if(userAccountData.getUserid().equals(netabareBlockConfig.getAdminTwitterId()))
+				String deleteId = getDeleteId(id);
+				if(deleteId != null && userAccountData.getUserid().equals(netabareBlockConfig.getAdminTwitterId()))
 				{
-					netabareAccountDataRepository.saveAndFlush(netabareAccountData);
+					NetabareAccountData netabareAccountData = new NetabareAccountData();
+					netabareAccountData.setUserid(getUserId(twitter,deleteId));
+					netabareAccountDataRepository.delete(netabareAccountData);
+				}else{
+					list.clear();
+					NetabareAccountData netabareAccountData = new NetabareAccountData();
+					netabareAccountData.setUserid(getUserId(twitter,id));
+					list.add(netabareAccountData);
+					if(userAccountData.getUserid().equals(netabareBlockConfig.getAdminTwitterId()))
+					{
+						netabareAccountDataRepository.saveAndFlush(netabareAccountData);
+					}
 				}
-
 			}
 
 			for (NetabareAccountData netabareAccountData : list) {

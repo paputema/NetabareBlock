@@ -16,6 +16,7 @@ import com.netabareblock.repositories.NetabareAccountDataRepository;
 import com.netabareblock.repositories.UserAccountDataRepository;
 
 import twitter4j.RateLimitStatus;
+import twitter4j.Relationship;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
@@ -59,8 +60,12 @@ public class NetabareBlockCron {
 			for (NetabareAccountData netabareAccountData : netabareAccountDataRepository.findAll()) {
 				try{
 					Long netabareid = netabareAccountData.getUserid();
-					checkRateLimit(twitter.reportSpam(netabareid).getRateLimitStatus());
-					checkRateLimit(twitter.createBlock(netabareid).getRateLimitStatus());
+					Relationship relationship = twitter.showFriendship(twitter.getId(), netabareid);
+					if(!relationship.isSourceBlockingTarget())
+					{
+						checkRateLimit(twitter.reportSpam(netabareid).getRateLimitStatus());
+						checkRateLimit(twitter.createBlock(netabareid).getRateLimitStatus());
+					}
 				} catch (TwitterException e) {
 					System.err.println(e);
 				}
@@ -95,7 +100,7 @@ public class NetabareBlockCron {
 
 	}
 
-	@Scheduled(cron = "0 0 * * * *", zone = "Asia/Tokyo")
+	@Scheduled(cron = "0 0 0,4,8,12,16,20 * * *", zone = "Asia/Tokyo")
 	public void todo() {
 		List<UserAccountData> userDatas = userAccountDataRepository.findAll();
 		for (UserAccountData userData : userDatas) {
